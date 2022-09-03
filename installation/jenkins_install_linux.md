@@ -78,6 +78,9 @@ sudo yum upgrade && sudo yum install jenkins ;
 sudo systemctl daemon-reload ;
 ```
 
+# :wrench: Configure Jenkins after installation
+- Follow the steps set up [Configure Jenkins after installation](jenkins_install_config.md) document.
+
 # :arrow_up: Starting, :arrow_down: Stopping, and :arrows_clockwise: Restarting Jenkins
 
 ## Enable the Jenkins service to start at boot using the command:
