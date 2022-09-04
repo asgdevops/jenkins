@@ -5,3 +5,4 @@ Basically it consists of notes or recipes about using Jenkins for CI/CD DevOps p
 
 # :bookmark_tabs: Table of Contents
 - :link: [Jenkins Installation](installation/README.md)
+- :link: [Jenkins Configuration](configuration/README.md)
