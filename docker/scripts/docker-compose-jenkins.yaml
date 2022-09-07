@@ -1,0 +1,40 @@
+# docker-compose.yaml
+version: "3.9"
+services:
+  docker-engine:
+    container_name: "${app_name}-docker"
+    image: docker:dind
+    ports:
+        - "${docker_port}:${docker_port}"
+    privileged: true
+    networks: 
+        - net
+    volumes:
+        - ${storage}/${app_name}-docker-certs:${DOCKER_CERT_PATH}
+        - ${storage}/${app_name}-data:${JENKINS_HOME}
+
+  jenkins:
+    build:
+        context: /app/data/storage/${app_name}
+    container_name: "${app_name}"
+    image: jenkins/jenkins:lts
+    ports:
+        - "${http_port}:8080/tcp"
+        - "${agent_port}:50000/tcp"
+    privileged: true
+    restart: on-failure
+    user: root
+    networks: 
+        - net
+    volumes:
+        - ${storage}/jenkins_home:${JENKINS_HOME}
+    working_dir: ${JENKINS_HOME}
+
+networks: 
+    net:
+        driver: bridge
+
+volumes:
+    data:
+        driver: local
+

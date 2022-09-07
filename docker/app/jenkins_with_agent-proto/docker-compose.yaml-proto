@@ -1,0 +1,61 @@
+# docker-compose.yaml
+version: "3.9"
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: "${storage}"
+    external: true
+    name: ${volume_data_id}
+
+  sock:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/var/run/docker.sock'
+    external: true
+    name: ${volume_socket_id}
+
+services:
+  jenkins:
+    build:
+        context: ${context}
+    container_name: "${app_name}"
+    environment:
+        - JENKINS_HOME = ${jenkins_home}
+    image: jenkins/jenkins:lts
+    ports:
+        - "${http_port}:8080/tcp"
+        - "${agent_port}:50000/tcp"
+    privileged: true
+    restart: on-failure
+    user: root
+    networks: 
+        - net
+    volumes:
+        - data:${jenkins_home}
+        - sock:/var/run/docker.sock
+    working_dir: "${jenkins_home}"
+
+  agent:
+    container_name: "${app_name}-agent"
+    environment:
+        - JENKINS_AGENT_SSH_PUBKEY = ${jenkins_agent_ssh_pub_key}
+    expose:
+        - 22
+    image: jenkins/ssh-agent:jdk11
+    networks:
+        - net
+    privileged: true  
+    user: root
+
+networks: 
+    net:
+        driver: bridge
+
+
+

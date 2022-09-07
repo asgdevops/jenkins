@@ -1,0 +1,35 @@
+# docker-compose.yaml
+version: "3.9"
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: "${storage}"
+    name: ${volume_id}
+
+services:
+  jenkins:
+    build:
+        context: ${context}
+    container_name: "${app_name}"
+    environment:
+        - JENKINS_HOME = ${jenkins_home}
+    image: jenkins/jenkins:lts
+    ports:
+        - "${http_port}:8080/tcp"
+        - "${agent_port}:50000/tcp"
+    privileged: true
+    restart: on-failure
+    user: jenkins
+    networks: 
+        - net
+    volumes:
+        - data:${jenkins_home}
+    working_dir: "${jenkins_home}"
+
+networks: 
+    net:
+        driver: bridge
