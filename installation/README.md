@@ -14,6 +14,7 @@ The hardware and software requisites needed to install Jenkins are listed below:
 - :link: [Linux](jenkins_install_linux.md)
 - :link: [macOS](jenkins_install_macos.md)
 - :link: [Windows](jenkins_install_windows.md)
+- :link: [Docker](docker/README.md)
 
 # :books: References
 - :link: [Installing Jenkins](https://www.jenkins.io/doc/book/installing/)
