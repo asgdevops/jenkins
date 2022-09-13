@@ -241,30 +241,47 @@ There are two possible ways to achieve this:
    
     ```bash
     # application name
-    app_name=jenkins
+    app_name=${app_name}
 
     # agent port
-    agent_port=50000
+    agent_port=${agent_port}
 
     # application context
-    context=`pwd`
+    context=${context}
 
     # application port
-    http_port=8080
+    http_port=${http_port}
 
-    # Application storage
-    storage=/app/data/storage/jenkins
+    # Java home
+    JAVA_HOME=/opt/java/openjdk
 
     # Jenkins variables
-    jenkins_home=/var/jenkins_home
+    JENKINS_HOME=/var/jenkins_home
+
+    # Application storage
+    storage=${storage}
 
     # Volumes name
-    volume_id=jenkins-data
+    volume_id=${app_name}-data
     ```
 
 2. Create the docker file.
 
-    ```Ansible
+    ```Docker
+    # Jenkins Dockerfile
+    FROM jenkins/jenkins:lts
+
+    USER root
+
+    # Install Maven
+    RUN apt update -y && \
+        apt install -y wget && \
+        apt install -y maven
+    ```
+
+3. Create the docker-compose file.
+
+    ```YAML
     # docker-compose.yaml
     version: "3.9"
 
@@ -280,30 +297,31 @@ There are two possible ways to achieve this:
     services:
     jenkins:
         build:
-            context: ${context}
+        context: ${context}
+        dockerfile: "jenkins.Dockerfile"
         container_name: "${app_name}"
-        environment:
-            - JENKINS_HOME = ${jenkins_home}
-        image: jenkins/jenkins:lts
+        env_file: 
+        - ./.env
+        image: "jenkins/jenkins:lts"
         ports:
-            - "${http_port}:8080/tcp"
-            - "${agent_port}:50000/tcp"
+        - "${http_port}:8080/tcp"
+        - "${agent_port}:50000/tcp"
         privileged: true
         restart: on-failure
-        user: jenkins
+        user: root
         networks: 
-            - net
+        - net
         volumes:
-            - data:${jenkins_home}
-        working_dir: "${jenkins_home}"
+        - data:${JENKINS_HOME}
+        working_dir: "${JENKINS_HOME}"
 
     networks: 
         net:
-            driver: bridge
-   ```
+        driver: bridge   
+    ```
 
 
-3. Startup the jenkins and agent containers.
+4. Startup the jenkins and agent containers.
 
     ```
     docker-compose -p jenkins up -d
@@ -311,7 +329,11 @@ There are two possible ways to achieve this:
 
 # :scroll: Scripts
 - [create_jenkins.sh](app/jenkins_base/create_jenkins.sh)
+- [jenkins.Dockerfile](app/jenkins_base/jenkins.Dockerfile)
 - [docker-compose.yaml](app/jenkins_base/docker-compose.yaml)
+- [destroy_jenkins.sh](app/jenkins_base/destroy_jenkins.sh)
+
+>_The `.env` file is created by the `create_jenkins.sh` script dynamically._
 
 # :books: References 
 - [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)

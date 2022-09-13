@@ -1,4 +1,4 @@
-# Create a new Jenkins instance
+# Destroy the Jenkins instance
 
 #
 # show usage
@@ -93,38 +93,24 @@ while [ "$#" -gt 0 ] ; do
 	esac;
 done;
 
-# Create the application directory if not exists
-[ ! -d ${storage} ] && sudo mkdir -p ${storage} ;
-
 cd ${context} ;
 
-#
-# Create the docker variables file
-#
-tee .env <<EOF
-# application name
-app_name=${app_name}
+echo "Removing the .env file";
+rm .env
 
-# agent port
-agent_port=${agent_port}
+echo "Deleting the ${app_name} container";
+docker stop jenkins && docker rm jenkins
 
-# application context
-context=${context}
+echo "Removing the volume";
+docker volume rm ${app_name}-data
 
-# application port
-http_port=${http_port}
+echo "Dropping the network";
+docker network rm ${app_name}_net
 
-# Java home
-JAVA_HOME=/opt/java/openjdk
+echo "Deleting the jenkins image";
+docker rmi jenkins/jenkins:lts
 
-# Jenkins variables
-JENKINS_HOME=/var/jenkins_home
+echo "Removing the storage directory"
+sudo rm -rf ${storage};
 
-# Application storage
-storage=${storage}
-
-# Volumes name
-volume_id=${app_name}-data
-EOF
-
-docker-compose -p ${app_name} up -d ;
+echo "Process complete.";

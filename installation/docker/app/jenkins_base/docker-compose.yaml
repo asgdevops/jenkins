@@ -13,23 +13,24 @@ volumes:
 services:
   jenkins:
     build:
-        context: ${context}
+      context: ${context}
+      dockerfile: "jenkins.Dockerfile"
     container_name: "${app_name}"
-    environment:
-        - JENKINS_HOME = ${jenkins_home}
-    image: jenkins/jenkins:lts
+    env_file: 
+      - ./.env
+    image: "jenkins/jenkins:lts"
     ports:
-        - "${http_port}:8080/tcp"
-        - "${agent_port}:50000/tcp"
+      - "${http_port}:8080/tcp"
+      - "${agent_port}:50000/tcp"
     privileged: true
     restart: on-failure
-    user: jenkins
+    user: root
     networks: 
-        - net
+      - net
     volumes:
-        - data:${jenkins_home}
-    working_dir: "${jenkins_home}"
+      - data:${JENKINS_HOME}
+    working_dir: "${JENKINS_HOME}"
 
 networks: 
     net:
-        driver: bridge
+      driver: bridge
