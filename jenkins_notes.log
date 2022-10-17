@@ -1,0 +1,169 @@
+# Hello World Pipeline
+pipeline {
+  agent any
+  stages {
+    stage("Greetings") {
+      steps {
+        echo 'Hello World!'
+      }
+    }
+  }
+}
+
+
+java -jar agent.jar -jnlpUrl http://localhost:49001/computer/agent%2D1/jenkins-agent.jnlp -secret @secret-file -workDir "/var/jenkins"
+
+java -jar swarm-client.jar -master http://localhost:49001 -username admin -password Devop$123 -name jenkins-swam-slave-1
+
+
+java -jar swarm-client.jar -master http://localhost:49001 -username admin -password Devop$123 -name jenkins-swam-slave-1
+
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+
+ExecStart=/usr/bin/dockerd -H 0.0.0.0:2375 fd:// --containerd=/run/containerd/containerd.sock
+
+
+docker run -d -p 49001:8080 -p 50000:50000 --rm \
+--volume $HOME/jenkins_home:/var/jenkins_home \
+--name jenkins_proxy jenkins/jenkins:lts
+
+docker network create jnet
+
+sudo mkdir -p /app/data/jenkins-docker/data && sudo mkdir -p /app/data/jenkins-docker/certs ;
+sudo mkdir -p /app/data/jenkins-lab/data && sudo mkdir -p /app/data/jenkins-lab/certs ;
+
+docker run \
+--detach \
+--env DOCKER_TLS_CERTDIR=/certs \
+--name jenkins-docker \
+--network jnet \
+--network-alias docker \
+--privileged \
+--publish 2375:2375 \
+--rm \
+--volume /app/data/jenkins-docker/data:/var/jenkins_home \
+--volume /app/data/jenkins-docker/certs:/certs/client:ro \
+docker:dind --storage-driver overlay2 
+
+
+docker run \
+--detach \
+--env DOCKER_HOST=tcp://docker:2375 \
+--env DOCKER_CERT_PATH=/certs/client \
+--env DOCKER_TLS_VERIFY=1 \
+--name jenkins-lab \
+--network jnet \
+--publish 49001:8080 \
+--publish 50000:50000 \
+--restart=on-failure \
+--user root \
+--volume /app/data/jenkins-lab/data:/var/jenkins_home \
+--volume /app/data/jenkins-lab/certs:/certs/client:ro \
+jenkins/jenkins:lts-jdk11
+
+jenkins/jenkins:lts
+
+agent_key='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC7HDQTKzhkwwYmlPGkhB7m6Q0HPsuzuljJLVbzpxSxO4HFIaDg0ytgXFVcV/KaSdLVU4wDQPTn85zeA+Ao0B2qP3uhvrBN4W6Wj2yByf/RE1HDFXTqkMYK2xvlvB1E4FEMLV0JMFY1f41FHOiQeeoPpaAhY9Svs8n6hW6j+wLMWVGU5+oF41qcF6qTv8/AJEn2XXGgS1F+yM1o/Z+pOZAuJYfH1mJ/uwK37/tcxvcFoucojVfxbT53KTkzt6QdbfLgnsHuv4ytIpMPO2WwNWG3jdv7GQBAIm+5odaYHc7O/O7Q9W8Cn4zlkkkYVV6wdAGYYL7H+jmWBsNs8A85Fun65LoMOizKK3DfH9rQzf07U4c5H7/Gt8Fjc7N7e/VvEQCJ1/uC7/ikwpcLi9ZcFBATCPGi1vJuEmmQNvoalosXcJ4q8ZMWdc79gbThnFk0K9UfXcXjWC6ThB5HTSMoiVq/3/ezecExK/CFwTEWKsTXCp7tWdyPcVLwpkQUuS1Jyu/evuPZknYcmpSbe3h/l5HWnNTlFnMJFpLSgZH/ewg1N1bBTw/8unqr1BTqG2CwCc63+9+b+cBc7KK4urnTR4ShH3tDhDBqfI+kJMCYnYDaHV3qvat5BVFFQXhADEkzLa2XFrEBN5AigUxBKXhI801DmhAd8HyKx+drwIHVlZIK3w== ansalaza@laptop-antonio-salazar'
+
+docker run \
+--detach \
+--env "JENKINS_AGENT_SSH_PUBKEY=${agent_key}" \
+--name agent1 \
+--network jnet \
+--publish 2244:22 \
+--rm \
+jenkins/ssh-agent:alpine
+
+
+# add env variables to the agent
+vars1="HOME=|USER=|MAIL=|LC_ALL=|LS_COLORS=|LANG=" ;
+vars2="HOSTNAME=|PWD=|TERM=|SHLVL=|LANGUAGE=|_=" ;
+vars="${vars1}|${vars2}" ;
+
+docker exec agent1 sh -c "env | egrep -v '^(${vars})' >> /etc/environment"
+
+
+
+
+Ant0n10.1973+ASg+230173
+
+
+FROM jenkins/jenkins:2.346.3-jdk11
+USER root
+RUN apt-get update && apt-get install -y lsb-release
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
+    https://download.docker.com/linux/debian/gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) \
+    signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
+    https://download.docker.com/linux/debian \
+    $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y docker-ce-cli
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean:1.25.7 docker-workflow:1.29"
+
+
+docker build . -t jenkins/blueocean:2.3
+
+docker run \
+--detach \
+--env DOCKER_HOST=tcp://docker:2375 \
+--env DOCKER_CERT_PATH=/certs/client \
+--env DOCKER_TLS_VERIFY=1 \
+--name jenkins_lab \
+--network jnet \
+--publish 49001:8080 \
+--publish 50000:50000 \
+--user root \
+--volume $HOME/jenkins_home:/var/jenkins_home \
+--volume $HOME/docker_certs:/certs/client:ro \
+jenkins/blueocean:2.3
+
+
+
+docker run --init jenkins/inbound-agent -url http://jenkins-server:port <secret> <agent name>
+
+
+docker run --init jenkins/inbound-agent -url http://127.0.0.1:49001 <secret> agent-1
+
+docker network create jnet
+
+docker run \
+--detach \
+--env DOCKER_CERT_PATH=/certs/client \
+--env DOCKER_TLS_VERIFY=1 \
+--name jenkins_lab \
+--network jnet \
+--publish 8080:8080 \
+--publish 50000:50000 \
+--user root \
+--volume $HOME/jenkins_home:/var/jenkins_home \
+--volume $HOME/docker_certs:/certs/client:ro \
+jenkins/blueocean:2.3
+
+
+
+useradd -m -d jenkins
+password jenkins
+
+jankins app: admin/Init$123
+
+id jenkins
+sudo mkdir /app/data
+sudo su - jenkins
+
+
+Light jenkins
+cd /app/data/jenkins_home
+
+docker run \
+--detach \
+--name jenkins \
+--network jnet \
+--publish 8787:8080 \
+--publish 50000:50000 \
+--user root \
+--volume $PWD/jenkins_home:/var/jenkins_home \
+jenkins/jenkins:lts-jdk11
+
+
+docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword

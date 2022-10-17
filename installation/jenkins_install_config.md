@@ -1,4 +1,4 @@
-# :information_source: Configure Jenkins after installation
+# :notes: Configure Jenkins after installation
 ## :paw_prints: Steps
 
 1. Take the Initial Admin Password  from the `/var/jenkins_home/secrets/initialAdminPassword` file.
