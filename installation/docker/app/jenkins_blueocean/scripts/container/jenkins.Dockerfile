@@ -1,5 +1,5 @@
 # Jenkins Dockerfile
-FROM jenkins/jenkins:2.346.3-jdk11 AS blueocean
+FROM jenkins/jenkins:2.387-jdk11 AS blueocean
 
 # Disable interactive mode
 ENV DEBIAN_FRONTEND noninteractive
