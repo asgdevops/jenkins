@@ -1,4 +1,4 @@
-# :information_source: Configure a new API Token
+# :book: Configure a new API Token
 ## :paw_prints: Steps
 1. Click the **username** on the top right corner on every page.
 2. Then click **Configure** to see the username API token.

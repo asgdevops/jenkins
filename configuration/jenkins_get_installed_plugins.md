@@ -1,4 +1,4 @@
-# :information_source: Get the plugins installed on Jenkins
+# :book: Get the plugins installed on Jenkins
 
 ## :paw_prints: Steps
 

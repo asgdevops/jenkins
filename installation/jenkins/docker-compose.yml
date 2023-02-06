@@ -1,0 +1,91 @@
+version: "3.9"
+
+services:
+
+  jenkins:
+    build:
+      context: .
+      dockerfile: "jenkins.Dockerfile"
+    container_name: "${container}"
+    env_file: .env
+    image: "${image}"
+    networks: 
+      - net
+    ports:
+      - "${http_port}:8080/tcp"
+      - "${agent_port}:50000/tcp"
+    privileged: true
+    restart: on-failure
+    user: root
+    volumes:
+      - data:${JENKINS_HOME}
+    working_dir: "${JENKINS_HOME}"
+
+  alpine:
+    build:
+      args:
+        - key=${ssh_key}
+        - username=${username}
+      context: .
+      dockerfile: "alpine.Dockerfile"
+    container_name: "alpine-controller"
+    image: "alpine/ssh:3.17"
+    networks: 
+      - net
+    volumes:
+      - data:${JENKINS_HOME}
+
+  centos:
+    build:
+      args:
+        - key=${ssh_key}
+        - username=${username}
+      context: .
+      dockerfile: "centos.Dockerfile"
+    container_name: "centos-agent"
+    image: "centos/ssh:7"
+    networks: 
+      - net
+    volumes:
+      - data:${JENKINS_HOME}
+ 
+  debian:
+    build:
+      args:
+        - key=${ssh_key}
+        - username=${username}
+      context: .
+      dockerfile: "debian.Dockerfile"
+    container_name: "debian-agent"
+    image: "debian/ssh:11"
+    networks: 
+      - net
+    volumes:
+      - data:${JENKINS_HOME}
+
+  ubuntu:
+    build:
+      args:
+        - key=${ssh_key}
+        - username=${username}
+      context: .
+      dockerfile: "ubuntu.Dockerfile"
+    container_name: "ubuntu-agent"
+    image: "ubuntu/ssh:22.04"
+    networks: 
+      - net
+    volumes:
+      - data:${JENKINS_HOME}
+
+networks: 
+    net:
+      driver: bridge
+
+volumes:
+  data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: "${data_dir}"
+    name: ${volume_data}

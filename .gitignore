@@ -3,3 +3,5 @@
 *-proto
 *.zip
 backup*
+prototype
+*.log
