@@ -28,12 +28,14 @@ The resources used in this lab, presented in this document, are configured in th
 - Docker 20.10.23
 
 
+
 In case your Virtual Machine requires additional disk space, follow the directions below to add more space:
 
 ## Prepare Jenkins storage
 
-1. Execute the steps found at [Adding storage ](adding_storage/README.md)
-2. Create jenkins persistent directories
+1. [Create a new Ubuntu 22.04 Virtual Machine in VirtualBox](https://github.com/asgdevops/virtualization/blob/main/virtualbox/vm/ubuntu2204/README.md)
+2. Execute the steps found at [Adding storage ](adding_storage/README.md)
+3. Create jenkins persistent directories
 
   - Jenkins app data
    
@@ -413,7 +415,17 @@ As a result, follow the steps below to complete the Jenkins installation.
 - [ansible_hello.log](logs/ansible_hello.log)
 
 # :books: References
-- [Installing Jenkins - Docker](https://www.jenkins.io/doc/book/installing/docker/)
+- :link: [Installing Jenkins - Docker](https://www.jenkins.io/doc/book/installing/docker/)
+- :link: [Installing Jenkins](https://www.jenkins.io/doc/book/installing/)
+- :link: [Jenkins dockerhub official image](https://hub.docker.com/r/jenkins/jenkins)
+
+
+
+  - ### Installing Jenkins on 
+    - :link: [Linux](jenkins_install_linux.md)
+    - :link: [macOS](jenkins_install_macos.md)
+    - :link: [Windows](jenkins_install_windows.md)
+    - :link: [Docker](docker/README.md)
 
 ## Repositories used in this process
 - :link: [asgdevops/cd-project-ansible](https://github.com/asgdevops/cd-project-ansible)
