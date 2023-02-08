@@ -23,7 +23,29 @@ _(Leszko, 2022, p.185)_
 
 <br/>
 
-# Declarative Pipeline Syntax Example
+# Types of pipelines
+## Scripted pipeline
+Scripted pipelines are written inside `node` blocks.
+A **Node** is a machine where Jenkins execute the tasks.
+
+**Jenkinsfile** scripted pipeline example:
+
+```groovy
+node ('Debian') {  
+    stage('Hello') { 
+        sh 'echo "Hello world!"'
+    }
+    stage('Bye') { 
+        sh 'echo "Goodbye!"'
+    }
+}
+```
+
+## Declarative Pipelines
+
+Declarative pipelines ease reading and writing the pipeline code. Furthermore, they have more options available.
+
+**Jekninsfile** declarative pipeline syntax example:
 
 ```groovy
 pipeline {
@@ -64,6 +86,9 @@ pipeline {
 - :link: [Pipeline](https://www.jenkins.io/doc/book/pipeline/)
 - :link: [Pipeline Syntax](https://www.jenkins.io/doc/book/pipeline/syntax/)
 - Leszko, R. (2022). _Continuous Delivery with Docker and Jenkins_ (3rd ed.). Packt. [https://www.packtpub.com/product/instant-minecraft-pi-edition-coding-how/9781803237480](https://www.packtpub.com/product/instant-minecraft-pi-edition-coding-how/9781803237480)
+
+- :link: [Pipeline concepts](https://www.jenkins.io/doc/book/pipeline/#pipeline-concepts)
+- :link: [Scripted Pipeline fundamentals](https://www.jenkins.io/doc/book/pipeline/#scripted-pipeline-fundamentals)
 
 ## Pipelines playground
 - :toolbox: [asgdevops/pipelines](https://github.com/asgdevops/pipelines)
